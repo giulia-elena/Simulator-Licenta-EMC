@@ -28,33 +28,37 @@ class SafetyFirstPredictor:
 
 # 2. Funcție pentru încărcarea și descărcarea modelelor din Google Drive
 @st.cache_resource
+@st.cache_resource
 def incarca_modele():
     path = '.'
     
-    # Ne asigurăm că folderul există pe serverul de cloud
-    if not os.path.exists(path):
-        os.makedirs(path)
-        
     cale_rf = os.path.join(path, 'model_RF.joblib')
     cale_hybrid = os.path.join(path, 'model_algoritm_custom_Safety_First.joblib')
+    cale_ann = os.path.join(path, 'model_ann_keras_drive.h5') # Nume nou pentru a ignora fișierul corupt de pe GitHub
     
-    # Descărcăm Random Forest dacă lipsește
+    # 1. Descărcăm Random Forest
     if not os.path.exists(cale_rf):
-        st.info("⏳ Se descarcă modelul Random Forest (Baza) din cloud... (Acest proces are loc doar la prima rulare)")
+        st.info("⏳ Se descarcă modelul Random Forest (Baza) din cloud...")
         id_rf = '1kGxhzD5qPhQOid2JLqwQkUQ8Whryhh3S'
         gdown.download(f'https://drive.google.com/uc?id={id_rf}', cale_rf, quiet=False)
 
-    # Descărcăm Safety First dacă lipsește
+    # 2. Descărcăm Safety First
     if not os.path.exists(cale_hybrid):
-        st.info("⏳ Se descarcă modelul Safety-First (Hibrid) din cloud... (Acest proces are loc doar la prima rulare)")
+        st.info("⏳ Se descarcă modelul Safety-First (Hibrid) din cloud...")
         id_hybrid = '1ULwgBFyQmYrFjSlFKiY-Q9sB9nzp0W3b'
         gdown.download(f'https://drive.google.com/uc?id={id_hybrid}', cale_hybrid, quiet=False)
 
-    # Încărcarea efectivă a fișierelor în memorie
+    # 3. Descărcăm ANN (Rețeaua Neuronală)
+    if not os.path.exists(cale_ann):
+        st.info("⏳ Se descarcă modelul Rețelei Neurale din cloud...")
+        id_ann = 'AICI_PUI_NOUL_ID_PENTRU_ANN' # <-- Înlocuiește cu ID-ul obținut la Pasul 1
+        gdown.download(f'https://drive.google.com/uc?id={id_ann}', cale_ann, quiet=False)
+
+    # Încărcarea efectivă a fișierelor
     encoders = joblib.load(os.path.join(path, 'encoders.joblib'))
     scaler = joblib.load(os.path.join(path, 'scaler_ann_keras.joblib'))
     rf_model = joblib.load(cale_rf)
-    ann_model = load_model(os.path.join(path, 'model_ann_keras.h5'), compile=False)
+    ann_model = load_model(cale_ann, compile=False) # Acum citim de la calea noua
     hybrid_model = joblib.load(cale_hybrid)
     
     return encoders, scaler, rf_model, ann_model, hybrid_model
