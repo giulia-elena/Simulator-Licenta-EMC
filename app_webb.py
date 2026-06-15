@@ -28,13 +28,12 @@ class SafetyFirstPredictor:
 
 # 2. Funcție pentru încărcarea și descărcarea modelelor din Google Drive
 @st.cache_resource
-@st.cache_resource
 def incarca_modele():
     path = '.'
     
     cale_rf = os.path.join(path, 'model_RF.joblib')
     cale_hybrid = os.path.join(path, 'model_algoritm_custom_Safety_First.joblib')
-    cale_ann = os.path.join(path, 'model_ann_keras_drive.h5') # Nume nou pentru a ignora fișierul corupt de pe GitHub
+    cale_ann = os.path.join(path, 'model_ann_keras_drive.h5') 
     
     # 1. Descărcăm Random Forest
     if not os.path.exists(cale_rf):
