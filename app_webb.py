@@ -51,7 +51,7 @@ def incarca_modele():
     # 3. Descărcăm ANN (Rețeaua Neuronală)
     if not os.path.exists(cale_ann):
         st.info("⏳ Se descarcă modelul Rețelei Neurale din cloud...")
-        id_ann = 'AICI_PUI_NOUL_ID_PENTRU_ANN' # <-- Înlocuiește cu ID-ul obținut la Pasul 1
+        id_ann = '1kOasTirnVhrfYcxoHlHbFIAJ0xd_JiE9' # <-- Înlocuiește cu ID-ul obținut la Pasul 1
         gdown.download(f'https://drive.google.com/uc?id={id_ann}', cale_ann, quiet=False)
 
     # Încărcarea efectivă a fișierelor
