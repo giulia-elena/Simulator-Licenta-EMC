@@ -29,7 +29,7 @@ class SafetyFirstPredictor:
 # 2. Funcție pentru încărcarea și descărcarea modelelor din Google Drive
 @st.cache_resource
 def incarca_modele():
-    path = '03_Modele_Salvate'
+    path = '.'
     
     # Ne asigurăm că folderul există pe serverul de cloud
     if not os.path.exists(path):
