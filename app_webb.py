@@ -188,8 +188,8 @@ info = pm[pid]
 distanta_selectata = st.sidebar.selectbox("4. Distanța față de sursă (m):", info['dist'])
 distanta = float(distanta_selectata)
 
-frecventa = st.sidebar.number_input("5. Frecvența de lucru (Hz):", min_value=4.5, max_value=20025.0, value=50.0, step=1.0)
-st.sidebar.caption("Interval permis: 4.5 - 20025 Hz")
+frecventa = st.sidebar.number_input("5. Frecvența de lucru (Hz):", min_value=4.5, max_value=20025.0, value=35.0, step=1.0)
+st.sidebar.caption("Interval permis: 5 - 20000 Hz")
 
 demo_mode = st.sidebar.selectbox("MOD DEMO (TESTARE ALERTE)", ["Normal (Real)", "Atenție (Portocaliu)", "Pericol (Roșu)"])
 
@@ -285,7 +285,7 @@ if btn_analiza:
         col_raport, col_indicator = st.columns([2, 1])
         
         with col_raport:
-            st.markdown("### 📝 JURNAL DIAGNOZĂ (Date Brute)")
+            st.markdown("### 📝 JURNAL DIAGNOZĂ TEHNICĂ")
             raport = f"1. CONFIGURAȚIE SCENARIU:\n"
             raport += f"   > Regim funcționare:     {regim.upper()}\n"
             raport += f"   > Amplasament:           {lk_label.upper()}\n"
