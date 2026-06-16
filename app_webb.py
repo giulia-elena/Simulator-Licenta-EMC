@@ -201,7 +201,7 @@ use_hybrid = st.sidebar.checkbox("Safety-First (RF + Marjă 3xMAE)", value=True)
 btn_analiza = st.sidebar.button("ANALIZEAZĂ CONFORMITATEA", type="primary", use_container_width=True)
 
 # --- ZONA PRINCIPALĂ ---
-st.title("Sistem de Analiză Multi-Model și Conformitate Legală EMC")
+st.title("Platformă AI pentru Conformitate EMC")
 
 if btn_analiza:
     if not (use_rf or use_ann or use_hybrid):
