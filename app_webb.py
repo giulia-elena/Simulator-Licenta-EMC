@@ -125,7 +125,7 @@ def calculeaza_limite_exacte(f):
 
 def deseneaza_grafic(predictie, lim_icnirp, lim_eu, culoare_bar):
     fig, ax = plt.subplots(figsize=(8, 2.5), dpi=100)
-    fig.patch.set_alpha(0.0) # Fundal transparent pentru a arata bine si pe Light si pe Dark mode
+    fig.patch.set_alpha(0.0) 
     ax.set_facecolor((0,0,0,0))
 
     bars = ax.barh([''], [predictie], color=culoare_bar, height=0.3)
@@ -157,8 +157,19 @@ st.set_page_config(page_title="Simulator EMC", layout="wide", page_icon="🚄")
 encoders, scaler, rf_model, ann_model, hybrid_model = incarca_modele()
 
 # --- BARA LATERALĂ ---
-st.sidebar.markdown("### 🚄 RAMĂ ELECTRICĂ\n**25 kV | 160 km/h | 4x105 kW**")
-st.sidebar.divider()
+st.sidebar.markdown("<h2 style='text-align: center; margin-bottom: 20px;'>PANOU DE CONTROL</h2>", unsafe_allow_html=True)
+
+# "Card" centrat pentru informațiile trenului
+st.sidebar.markdown(
+    """
+    <div style='text-align: center; background-color: #1e3a8a15; padding: 15px; border-radius: 10px; border: 1px solid #3b82f640; margin-bottom: 25px;'>
+        <div style='font-size: 45px;'>🚄</div>
+        <div style='font-weight: bold; font-size: 16px; color: #3b82f6; margin-top: 5px;'>RAMĂ ELECTRICĂ</div>
+        <div style='font-size: 12px; color: #60a5fa; margin-top: 2px;'>25 kV | 160 km/h | 4x105 kW</div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # Cascadă de filtre
 regim = st.sidebar.selectbox("1. Regim de funcționare:", ["Dinamic", "Static"])
@@ -178,7 +189,7 @@ distanta_selectata = st.sidebar.selectbox("4. Distanța față de sursă (m):", 
 distanta = float(distanta_selectata)
 
 frecventa = st.sidebar.number_input("5. Frecvența de lucru (Hz):", min_value=4.5, max_value=20025.0, value=50.0, step=1.0)
-st.sidebar.caption("Interval permis: 5  - 20000 Hz")
+st.sidebar.caption("Interval permis: 4.5 - 20025 Hz")
 
 demo_mode = st.sidebar.selectbox("MOD DEMO (TESTARE ALERTE)", ["Normal (Real)", "Atenție (Portocaliu)", "Pericol (Roșu)"])
 
@@ -236,16 +247,19 @@ if btn_analiza:
         procent_limita = (val_max / lim_i) * 100
         procent_bara = min(procent_limita, 100) / 100.0
 
-        # Determinare Status și Culori
+        # Determinare Status, Culori și Iconițe dinamice
         if val_max >= lim_e:
             culoare_hex = "#ef4444" # Roșu
             status_txt = "PERICOL (Depășire limită profesională)"
+            iconita_mare = "☢️"
         elif val_max >= lim_i:
             culoare_hex = "#f59e0b" # Portocaliu
             status_txt = "ATENȚIE (Depășire limită public)"
+            iconita_mare = "⚠️"
         else:
             culoare_hex = "#10b981" # Verde
             status_txt = "CONFORM (Zonă sigură)"
+            iconita_mare = "🛡️"
 
         # ---------------------------------------------------------
         # AFIȘARE DASHBOARD
@@ -271,7 +285,7 @@ if btn_analiza:
         col_raport, col_indicator = st.columns([2, 1])
         
         with col_raport:
-            st.markdown("### 📝 JURNAL DIAGNOZĂ TEHNICĂ")
+            st.markdown("### 📝 JURNAL DIAGNOZĂ (Date Brute)")
             raport = f"1. CONFIGURAȚIE SCENARIU:\n"
             raport += f"   > Regim funcționare:     {regim.upper()}\n"
             raport += f"   > Amplasament:           {lk_label.upper()}\n"
@@ -288,12 +302,25 @@ if btn_analiza:
             raport += f"   > Grad ocupare ICNIRP:    {procent_limita:.4f}%\n"
             
             st.code(raport, language="text")
+            
+            # Buton util pentru descărcarea jurnalului (impresionează mereu la prezentări)
+            st.download_button(
+                label="📥 Descarcă Jurnalul (TXT)",
+                data=raport,
+                file_name="Raport_Diagnoza_EMC.txt",
+                mime="text/plain"
+            )
 
         with col_indicator:
             st.markdown("### 🎛️ INDICATOR SIGURANȚĂ")
-            st.write("")
-            st.write("")
+            
+            # Iconița Uriașă Centrată
+            st.markdown(f"<div style='text-align: center; font-size: 110px; margin-top: 10px; margin-bottom: 20px;'>{iconita_mare}</div>", unsafe_allow_html=True)
+            
+            # Bara de Progres
             st.progress(procent_bara)
             st.markdown(f"<p style='text-align: center; font-weight: bold; color: {culoare_hex};'>{procent_limita:.2f}% din limita publică</p>", unsafe_allow_html=True)
+
 else:
+    # Mesaj de întâmpinare subtil înainte de a apăsa butonul
     st.info("Alegeți parametrii din meniul lateral și apăsați 'ANALIZEAZĂ CONFORMITATEA' pentru a începe.")
